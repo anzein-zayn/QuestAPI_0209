@@ -5,16 +5,20 @@ import com.example.pertemuan11.apiservice.ServiceApiSiswa
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
 interface ContainerApp {
     val repositoryDataSiswa: RepositoryDataSiswa
 }
 
+private val json = Json {
+    ignoreUnknownKeys = true
+    prettyPrint = true
+    isLenient = true
+}
+
 class DefaultContainerApp : ContainerApp {
-    private val baseUrl = "http://10.0.2.2/umyTI/"
+    private val baseUrl = "http://127.0.0.1:1913/umyTI/"
 
 //    val logging = HttpLoggingInterceptor().apply {
 //        level = HttpLoggingInterceptor.Level.BODY
@@ -25,13 +29,7 @@ class DefaultContainerApp : ContainerApp {
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
-        .addConverterFactory(
-            Json {
-                ignoreUnknownKeys = true
-                prettyPrint = true
-                isLenient = true
-            }.asConverterFactory("application/json".toMediaType())
-        )
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
 //        .client(klien)
         .build()
 
